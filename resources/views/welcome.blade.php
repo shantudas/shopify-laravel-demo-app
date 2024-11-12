@@ -1,3 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Laravel with Vue 3 and Vite</title>
+    @vite(['resources/js/app.js', 'resources/css/app.css'])
+</head>
+<body>
+<div id="app"></div>
+</body>
+</html>
 {{--<!DOCTYPE html>--}}
 {{--<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">--}}
 {{--    <head>--}}
@@ -175,17 +185,19 @@
 {{--    </body>--}}
 {{--</html>--}}
 
-@extends('shopify-app::layouts.default')
+{{--@extends('shopify-app::layouts.default')--}}
 
-@section('content')
-    <!-- You are: (shop domain name) -->
-    <p>You are: {{ $shopDomain ?? Auth::user()->name }}</p>
-@endsection
+{{--@section('content')--}}
+{{--    <!-- You are: (shop domain name) -->--}}
+{{--    <p>You are: {{ $shopDomain ?? Auth::user()->name }}</p>--}}
+{{--@endsection--}}
 
-@section('scripts')
-    @parent
+{{--@section('scripts')--}}
+{{--    @parent--}}
 
-    <script>
-        actions.TitleBar.create(app, { title: 'Welcome' });
-    </script>
-@endsection
+{{--    <script>--}}
+{{--        actions.TitleBar.create(app, { title: 'Welcome' });--}}
+{{--    </script>--}}
+{{--@endsection--}}
+
+

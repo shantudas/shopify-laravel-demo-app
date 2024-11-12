@@ -37,7 +37,7 @@ return [
     */
 
     'domain' => env('SHOPIFY_DOMAIN'),
-    
+
     /*
     |--------------------------------------------------------------------------
     | Manual routes
@@ -406,6 +406,13 @@ return [
     */
 
     'webhooks' => [
+
+        [
+            'topic' => 'PRODUCTS_UPDATE',
+            'address' => 'https://emerging-live-cricket.ngrok-free.app/webhook/products-update'
+        ],
+
+
         /*
             [
                 'topic' => env('SHOPIFY_WEBHOOK_1_TOPIC', 'ORDERS_CREATE'),

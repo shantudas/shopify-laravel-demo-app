@@ -53,11 +53,7 @@ class BulkOperationsFinishJob implements ShouldQueue
         // Convert domain
         $this->shopDomain = ShopDomain::fromNative($this->shopDomain);
 
-//        logger()->info('product list', (array)$this->data);
-
         if ($this->data->status === 'completed') {
-//            $bulkOperationId = str_replace("gid://shopify/BulkOperation/", "", $this->data->admin_graphql_api_id);
-//            logger()->info("bulk operation id:: $bulkOperationId");
             $this->fetchAndStoreProducts();
         }
 
@@ -106,7 +102,7 @@ class BulkOperationsFinishJob implements ShouldQueue
 
         if (isset($data['data']['currentBulkOperation'])) {
             $bulkOperation = $data['data']['currentBulkOperation'];
-            // You can now access the status, url, and other properties
+            // access the status, url, and other properties
             logger()->info('Bulk Operation Data', $bulkOperation);
 
             $url = $bulkOperation['url'];
@@ -118,7 +114,7 @@ class BulkOperationsFinishJob implements ShouldQueue
                 $jsonlData = $response->body();
                 logger()->info('Bulk Operation json string', (array)$jsonlData);
                 // Now you have the JSONL data as a string
-                $this->saveData($jsonlData);
+                $this->storeProductData($jsonlData);
 
             } else {
                 logger()->error("Failed to download JSONL file.");
@@ -127,53 +123,11 @@ class BulkOperationsFinishJob implements ShouldQueue
         }
     }
 
-    private function saveData(string $jsonlData)
+    private function storeProductData(string $jsonlData)
     {
-        $lines = explode("\n", $jsonlData);
-        logger()->info("saveData lines ::",$lines);
-
-
-//        foreach ($lines as $line) {
-//            if (trim($line) !== '') {
-//                $jsonlData = json_decode($line, true);
-//            }
-//        }
         $jsonString = '[' . preg_replace('/}\s*{/', '},{', $jsonlData) . ']';
         $jsonData=json_decode($jsonString, true);
 
-//        $jsonData = [
-//            [
-//                "id" => "gid://shopify/Product/9778927632668",
-//                "title" => "The Minimal Snowboard",
-//                "status" => "ACTIVE"
-//            ],
-//            [
-//                "id" => "gid://shopify/ProductVariant/50125384024348",
-//                "title" => "Default Title",
-//                "price" => "885.95",
-//                "__parentId" => "gid://shopify/Product/9778927632668"
-//            ],
-//            [
-//                "id" => "gid://shopify/Product/9778927698204",
-//                "title" => "The Videographer Snowboard",
-//                "status" => "ACTIVE"
-//            ],
-//            [
-//                "src" => "https://cdn.shopify.com/s/files/1/0895/3865/8588/files/Main.jpg?v=1727707425",
-//                "altText" => "The top and bottom view of a snowboard...",
-//                "__parentId" => "gid://shopify/Product/9778927698204"
-//            ],
-//            [
-//                "id" => "gid://shopify/ProductVariant/50125384089884",
-//                "title" => "Default Title",
-//                "price" => "885.95",
-//                "__parentId" => "gid://shopify/Product/9778927698204"
-//            ]
-//        ];
-
-//        logger()->info("saveData jsonData ::",$jsonData);
-
-        // Array to store product data
         $products = [];
         logger()->info("saveData products:: ",$products);
 
@@ -209,7 +163,7 @@ class BulkOperationsFinishJob implements ShouldQueue
 
         logger()->info("saveData products :: ",$products);
 
-        // Now you can save the products to the database
+        // save the products to the database
         foreach ($products as $product) {
             Product::updateOrCreate(
                 ['shopify_id' => $product['id']], // Unique identifier

@@ -6,10 +6,6 @@
 
 Go to branch [assignment-project-module-5](https://github.com/shantudas/shopify-laravel-demo-app/tree/assignment-project-module-5)
 
-### Screenshots
-![Screenshot 2024-11-14 at 1.10.26AM.png](..%2F..%2F..%2F..%2F..%2FDesktop%2FScreenshot%202024-11-14%20at%201.10.26%E2%80%AFAM.png)
-![Screenshot 2024-11-14 at 1.10.41AM.png](..%2F..%2F..%2F..%2F..%2FDesktop%2FScreenshot%202024-11-14%20at%201.10.41%E2%80%AFAM.png)
-
 ### Instructions
 1. set .env for shopify
 2. migrate the project

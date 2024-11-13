@@ -891,10 +891,10 @@
             <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
             <tr>
                 <th scope="col" class="px-6 py-3">
-                    TITLE
+                    Image
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    SHOPIFY ID
+                    TITLE
                 </th>
                 <th scope="col" class="px-6 py-3">
                     PRICE
@@ -910,21 +910,20 @@
             <tbody>
             @foreach($products as $product)
                 <tr class="odd:bg-white odd:dark:bg-gray-900 even:bg-gray-50 even:dark:bg-gray-800 border-b dark:border-gray-700">
-                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        <img src="{{$product->image_src}}" alt="{{$product->title}}" class="w-16 h-16 object-cover">
-                        <span>{{$product->title}}</span>
-                    </th>
                     <td class="px-6 py-4">
-                        {{$product->shopify_id}}
+                        <img src="{{$product->image_src}}" alt="{{$product->title}}" class="w-16 h-16 object-cover">
                     </td>
+                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <p>{{$product->title}}</p>
+                    </th>
                     <td class="px-6 py-4">
                         {{$product->price}}
                     </td>
                     <td class="px-6 py-4">
-                        @if($product->status === 'active')
+                        @if($product->status === 'ACTIVE')
                             <span class="text-green-600 font-bold">Active</span>
                         @elseif($product->status === 'ARCHIVED')
-                            <span class="text-green-600 font-bold">Archived</span>
+                            <span class="text-grey-600 font-bold">Archived</span>
                         @else
                             <span class="text-red-600 font-bold">Draft</span>
                         @endif

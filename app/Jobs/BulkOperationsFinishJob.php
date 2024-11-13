@@ -116,6 +116,7 @@ class BulkOperationsFinishJob implements ShouldQueue
 
             if ($response->successful()) {
                 $jsonlData = $response->body();
+                logger()->info('Bulk Operation json string', (array)$jsonlData);
                 // Now you have the JSONL data as a string
                 $this->saveData($jsonlData);
 
@@ -129,31 +130,96 @@ class BulkOperationsFinishJob implements ShouldQueue
     private function saveData(string $jsonlData)
     {
         $lines = explode("\n", $jsonlData);
+        logger()->info("saveData lines ::",$lines);
 
-        foreach ($lines as $line) {
-            if (trim($line) !== '') {
-                $data = json_decode($line, true);
 
-                if (isset($data['__parentId'])) {
-                    // Save variant
-                    Product::updateOrCreate(
-                        ['shopify_id' => $data['id']], // Unique identifier
-                        [
-                            'title' => $data['title'],
-                            'price' => $data['price'],
-                            'parent_id' => $data['__parentId'] // Assuming you have a parent_id column
-                        ]
-                    );
-                } else {
-                    // Save product
-                    Product::updateOrCreate(
-                        ['shopify_id' => $data['id']], // Unique identifier
-                        [
-                            'title' => $data['title']
-                        ]
-                    );
-                }
+//        foreach ($lines as $line) {
+//            if (trim($line) !== '') {
+//                $jsonlData = json_decode($line, true);
+//            }
+//        }
+        $jsonString = '[' . preg_replace('/}\s*{/', '},{', $jsonlData) . ']';
+        $jsonData=json_decode($jsonString, true);
+
+//        $jsonData = [
+//            [
+//                "id" => "gid://shopify/Product/9778927632668",
+//                "title" => "The Minimal Snowboard",
+//                "status" => "ACTIVE"
+//            ],
+//            [
+//                "id" => "gid://shopify/ProductVariant/50125384024348",
+//                "title" => "Default Title",
+//                "price" => "885.95",
+//                "__parentId" => "gid://shopify/Product/9778927632668"
+//            ],
+//            [
+//                "id" => "gid://shopify/Product/9778927698204",
+//                "title" => "The Videographer Snowboard",
+//                "status" => "ACTIVE"
+//            ],
+//            [
+//                "src" => "https://cdn.shopify.com/s/files/1/0895/3865/8588/files/Main.jpg?v=1727707425",
+//                "altText" => "The top and bottom view of a snowboard...",
+//                "__parentId" => "gid://shopify/Product/9778927698204"
+//            ],
+//            [
+//                "id" => "gid://shopify/ProductVariant/50125384089884",
+//                "title" => "Default Title",
+//                "price" => "885.95",
+//                "__parentId" => "gid://shopify/Product/9778927698204"
+//            ]
+//        ];
+
+//        logger()->info("saveData jsonData ::",$jsonData);
+
+        // Array to store product data
+        $products = [];
+        logger()->info("saveData products:: ",$products);
+
+        // Loop through the JSON data
+        foreach ($jsonData as $data) {
+            // Check if the data represents a product (has id, title, and status)
+            if (isset($data['id'], $data['title'], $data['status'])) {
+                // Initialize product entry
+                $products[$data['id']] = [
+                    'id' => $data['id'],
+                    'title' => $data['title'],
+                    'status' => $data['status'],
+                    'price' => null,
+                    'src' => null
+                ];
             }
+        }
+
+        // Loop again to attach variants and images
+        foreach ($jsonData as $data) {
+            // Check for variants with __parentId
+            if (isset($data['__parentId'], $data['price']) && isset($products[$data['__parentId']])) {
+                // Attach price to the corresponding product
+                $products[$data['__parentId']]['price'] = $data['price'];
+            }
+
+            // Check for images with __parentId
+            if (isset($data['__parentId'], $data['src']) && isset($products[$data['__parentId']])) {
+                // Attach src to the corresponding product
+                $products[$data['__parentId']]['src'] = $data['src'];
+            }
+        }
+
+        logger()->info("saveData products :: ",$products);
+
+        // Now you can save the products to the database
+        foreach ($products as $product) {
+            Product::updateOrCreate(
+                ['shopify_id' => $product['id']], // Unique identifier
+                [
+                    'title' => $product['title'],
+                    'status' => $product['status'],
+                    'price' => $product['price'],
+                    'image_src' => $product['src']
+                ]
+            );
         }
     }
 }

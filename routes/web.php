@@ -15,7 +15,11 @@ use Illuminate\Support\Facades\Route;
 
 //Route::get('/api/products', [ProductController::class, 'index'])->middleware('verify.shopify');
 
-Route::get('/', [ProductController::class, 'index'])->middleware('verify.shopify');
+Route::get('/shop', function () {
+    return view('shop');
+})->middleware(['verify.shopify'])->name('shop');
+
+Route::get('/products', [ProductController::class, 'index'])->middleware('verify.shopify')->name('products');
 
 
 

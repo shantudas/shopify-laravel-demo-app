@@ -37,7 +37,7 @@ return [
     */
 
     'domain' => env('SHOPIFY_DOMAIN'),
-    
+
     /*
     |--------------------------------------------------------------------------
     | Manual routes
@@ -406,6 +406,11 @@ return [
     */
 
     'webhooks' => [
+        [
+            'topic' => 'BULK_OPERATIONS_FINISH',
+            'address' => 'https://emerging-live-cricket.ngrok-free.app/webhook/bulk-operations-finish'
+        ]
+
         /*
             [
                 'topic' => env('SHOPIFY_WEBHOOK_1_TOPIC', 'ORDERS_CREATE'),
@@ -618,7 +623,8 @@ return [
     | No changes are made for Vue.js and Blade.
     |
     */
-    'frontend_engine' => env('SHOPIFY_FRONTEND_ENGINE', 'BLADE'),
+//    'frontend_engine' => env('SHOPIFY_FRONTEND_ENGINE', 'BLADE'),
+    'frontend_engine' => env('SHOPIFY_FRONTEND_ENGINE', 'VUE'),
 
     'iframe_ancestors' => '',
 ];

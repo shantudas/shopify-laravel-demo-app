@@ -7,6 +7,11 @@
 Go to branch [assignment-project-module-5](https://github.com/shantudas/shopify-laravel-demo-app/tree/assignment-project-module-5)
 
 ### Instructions
+![Shop Screenshot](https://raw.githubusercontent.com/shantudas/shopify-laravel-demo-app/screenshots/public/images/sc_shop.png)
+![Products Screenshot](https://raw.githubusercontent.com/shantudas/shopify-laravel-demo-app/screenshots/public/images/sc_prducts.png)
+
+
+### Instructions
 1. set .env for shopify
 2. migrate the project
 3. Register webhook for bulk operation finish
